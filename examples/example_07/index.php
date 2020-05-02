@@ -2,8 +2,6 @@
 /**
  * Build a simple HTML page with multiple providers, opening provider authentication in a pop-up.
  */
-@session_start();
-$_SESSION['nonce'] = bin2hex(random_bytes(32));
 
 require 'path/to/vendor/autoload.php';
 require 'config.php';
@@ -23,7 +21,7 @@ $adapters = $hybridauth->getConnectedAdapters();
     <script>
         function auth_popup( provider ){
             // replace 'path/to/hybridauth' with the real path to this script
-            var authWindow = window.open('https://path/to/hybridauth/examples/example_07/callback.php?provider='+provider+'&nonce=<?php echo htmlspecialchars($_SESSION['nonce']); ?>', 'authWindow', 'width=600,height=400,scrollbars=yes');
+            var authWindow = window.open('https://path/to/hybridauth/examples/example_07/callback.php?provider='+provider, 'authWindow', 'width=600,height=400,scrollbars=yes');
             return false;
         }
     </script>
@@ -37,8 +35,8 @@ $adapters = $hybridauth->getConnectedAdapters();
 <?php foreach ($hybridauth->getProviders() as $name) : ?>
     <?php if (!isset($adapters[$name])) : ?>
         <li>
-            <a href="#" onclick="javascript:auth_popup('<?php print $name ?>');">
-                Sign in with <?php print $name ?>
+            <a href="#" onclick="javascript:auth_popup('<?php print esc_attr($name) ?>');">
+                Sign in with <?php print esc_attr($name) ?>
             </a>
         </li>
     <?php endif; ?>
@@ -51,9 +49,9 @@ $adapters = $hybridauth->getConnectedAdapters();
     <ul>
         <?php foreach ($adapters as $name => $adapter) : ?>
             <li>
-                <strong><?php print $adapter->getUserProfile()->displayName; ?></strong> from
-                <i><?php print $name; ?></i>
-                <span>(<a href="<?php print $config['callback'] . "?logout={$name}"; ?>&nonce=<?php echo htmlspecialchars($_SESSION['nonce']); ?>">Log Out</a>)</span>
+                <strong><?php print esc_attr($adapter)->getUserProfile()->displayName; ?></strong> from
+                <i><?php print esc_attr($name); ?></i>
+                <span>(<a href="<?php print esc_attr($config['callback']) . esc_html("?logout={$name}"); ?>">Log Out</a>)</span>
             </li>
         <?php endforeach; ?>
     </ul>

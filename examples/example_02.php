@@ -72,5 +72,5 @@ try {
     $adapter->disconnect();
 }
 catch (\Exception $e) {
-    echo $e->getMessage();
+    echo esc_attr($e)->getMessage();
 }
