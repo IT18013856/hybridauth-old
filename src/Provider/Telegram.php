@@ -145,7 +145,7 @@ class Telegram extends AbstractAdapter implements AdapterInterface
         $this->logger->debug(sprintf('%s::authenticateBegin(), redirecting user to:', get_class($this)));
 
         exit(
-            <<<HTML
+            esc_html(){
 <center>
     <script async src="https://telegram.org/js/telegram-widget.js?7"
             data-telegram-login="{$this->botId}"
@@ -154,7 +154,7 @@ class Telegram extends AbstractAdapter implements AdapterInterface
             data-request-access="write">
     </script>
 </center>
-HTML
+}
         );
     }
 
