@@ -2,6 +2,8 @@
 /**
  * Build a simple HTML page with multiple providers.
  */
+@session_start();
+$_SESSION['nonce'] = bin2hex(random_bytes(32));
 
 include 'vendor/autoload.php';
 include 'config.php';
@@ -25,8 +27,8 @@ $adapters = $hybridauth->getConnectedAdapters();
     <?php foreach ($hybridauth->getProviders() as $name) : ?>
         <?php if (!isset($adapters[$name])) : ?>
             <li>
-                <a href="<?php print esc_attr($config['callback']) . esc_attr("?provider={$name}";) ?>">
-                    Sign in with <strong><?php print esc_attr($name); ?></strong>
+                <a href="<?php print $config['callback'] . "?provider={$name}"; ?>&nonce=<?php echo htmlspecialchars($_SESSION['nonce']); ?>">
+                    Sign in with <strong><?php print $name; ?></strong>
                 </a>
             </li>
         <?php endif; ?>
@@ -38,9 +40,9 @@ $adapters = $hybridauth->getConnectedAdapters();
     <ul>
         <?php foreach ($adapters as $name => $adapter) : ?>
             <li>
-                <strong><?php print esc_attr($adapter)esc_attr(->get)UserProfile()->displayName; ?></strong> from
-                <i><?php print esc_attr($name); ?></i>
-                <span>(<a href="<?php print esc_attr($config['callback']) . esc_attr("?logout={$name}"); ?>">Log Out</a>)</span>
+                <strong><?php print $adapter->getUserProfile()->displayName; ?></strong> from
+                <i><?php print $name; ?></i>
+                <span>(<a href="<?php print $config['callback'] . "?logout={$name}"; ?>&nonce=<?php echo htmlspecialchars($_SESSION['nonce']); ?>">Log Out</a>)</span>
             </li>
         <?php endforeach; ?>
     </ul>
